@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PharmaManage Pro</title>
+    <title>PharmaManage Pro - Interactive</title>
     <style>
         /* CSS Styles */
         :root {
-            --primary: #0056b3;
-            --secondary: #20c997;
-            --dark: #343a40;
-            --light: #f8f9fa;
+            --primary: #0f172a;
+            --secondary: #3b82f6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --light: #f1f5f9;
             --white: #ffffff;
+            --text-main: #334155;
         }
 
         body {
@@ -19,94 +21,32 @@
             margin: 0;
             padding: 0;
             background-color: var(--light);
-            color: var(--dark);
+            color: var(--text-main);
         }
-
-        /* --- Auth Overlay --- */
-        #authOverlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .auth-card {
-            background: var(--white);
-            padding: 2.5rem;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 350px;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
-
-        .auth-card h2 { color: var(--primary); margin-top: 0; }
-        .auth-card input {
-            width: 100%; padding: 10px; margin: 10px 0;
-            border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;
-        }
-        .auth-card button {
-            width: 100%; padding: 10px; background: var(--primary);
-            color: white; border: none; border-radius: 4px; cursor: pointer;
-            font-weight: bold; margin-top: 10px;
-        }
-        .auth-card button:hover { background: #004494; }
-        .auth-card p { font-size: 0.85rem; color: #666; cursor: pointer; text-decoration: underline; margin-top: 15px;}
-
-        /* --- Main Layout --- */
-        #mainApp { display: none; } /* Hidden until login */
 
         header {
             background: var(--primary);
             color: var(--white);
-            padding: 1rem 2rem;
+            padding: 1.5rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         header h1 { margin: 0; font-size: 1.5rem; }
-        header button {
-            background: #dc3545; color: white; border: none;
-            padding: 5px 15px; border-radius: 4px; cursor: pointer;
-        }
-
-        /* --- Slideshow --- */
-        .slideshow-container {
-            width: 100%;
-            height: 250px;
-            background: var(--dark);
-            position: relative;
-            overflow: hidden;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-
-        .slide {
-            display: none;
-            position: absolute;
-            width: 100%;
-            animation: fade 1.5s;
-        }
         
-        .slide h2 { font-size: 2.5rem; margin: 0; color: var(--secondary); }
-        .slide p { font-size: 1.2rem; }
-
-        @keyframes fade {
-            from {opacity: .4} 
-            to {opacity: 1}
+        .stat-box {
+            background: var(--secondary);
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 1.2rem;
         }
 
-        /* --- Dashboard Grid --- */
         .dashboard {
             display: grid;
-            grid-template-columns: 1fr 2fr;
+            grid-template-columns: 1fr 3fr;
             gap: 2rem;
             padding: 2rem;
             max-width: 1400px;
@@ -118,228 +58,226 @@
             padding: 1.5rem;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: var(--primary);
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 10px;
+        }
+
+        /* Form Styles */
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; }
+        .form-group input {
+            width: 100%; padding: 10px; border: 1px solid #cbd5e1; 
+            border-radius: 4px; box-sizing: border-box;
+        }
+
+        button {
+            background-color: var(--secondary);
+            color: white; border: none; padding: 10px 15px;
+            border-radius: 4px; cursor: pointer; font-weight: bold;
+            width: 100%; transition: 0.2s;
+        }
+        button:hover { filter: brightness(90%); }
+        
+        .btn-success { background-color: var(--success); width: auto; font-size: 0.8rem; padding: 5px 10px;}
+        .btn-danger { background-color: var(--danger); width: auto; font-size: 0.8rem; padding: 5px 10px;}
+
+        /* Table Styles */
+        .table-container {
             max-height: 600px;
             overflow-y: auto;
         }
 
-        .card h3 {
-            border-bottom: 2px solid var(--light);
-            padding-bottom: 10px;
-            margin-top: 0;
-            color: var(--primary);
+        table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background: var(--light); position: sticky; top: 0; z-index: 10; font-weight: 600;}
+        
+        .actions {
+            display: flex;
+            gap: 5px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9rem;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-
-        th {
-            background: var(--light);
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .badge {
-            background: var(--secondary);
-            color: white;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
+        .total-price {
+            font-weight: bold;
+            color: var(--success);
         }
 
     </style>
 </head>
 <body>
 
-    <div id="authOverlay">
-        <div class="auth-card" id="setupCard">
-            <h2>Set Software Password</h2>
-            <p style="text-decoration: none;">First time setup. Create a master password.</p>
-            <input type="password" id="newPassword" placeholder="Enter new password">
-            <button onclick="setPassword()">Set Password</button>
+    <header>
+        <h1>PharmaManage System</h1>
+        <div class="stat-box" id="grandTotalDisplay">
+            Total Inventory Value: 0 PKR
+        </div>
+    </header>
+
+    <div class="dashboard">
+        
+        <div class="card" style="height: fit-content;">
+            <h3>Add New Medicine</h3>
+            <form id="addMedForm">
+                <div class="form-group">
+                    <label for="medId">Medicine ID / Barcode</label>
+                    <input type="text" id="medId" required placeholder="e.g. M021">
+                </div>
+                <div class="form-group">
+                    <label for="medName">Medicine Name</label>
+                    <input type="text" id="medName" required placeholder="e.g. Panadol">
+                </div>
+                <div class="form-group">
+                    <label for="medPrice">Price per Unit (PKR)</label>
+                    <input type="number" id="medPrice" required min="1" placeholder="e.g. 30">
+                </div>
+                <div class="form-group">
+                    <label for="medStock">Initial Stock</label>
+                    <input type="number" id="medStock" required min="0" placeholder="e.g. 100">
+                </div>
+                <button type="submit">Add to Inventory</button>
+            </form>
         </div>
 
-        <div class="auth-card" id="loginCard" style="display:none;">
-            <h2>PharmaManage Login</h2>
-            <input type="password" id="loginPassword" placeholder="Enter master password">
-            <button onclick="login()">Access System</button>
-            <p onclick="forgotPassword()">Forgot Password? Send Email Reset</p>
-        </div>
-    </div>
-
-    <div id="mainApp">
-        <header>
-            <h1>PharmaManage Pro</h1>
-            <button onclick="logout()">Logout</button>
-        </header>
-
-        <div class="slideshow-container">
-            <div class="slide">
-                <h2>Welcome to PharmaManage</h2>
-                <p>Your complete inventory & sales solution.</p>
-            </div>
-            <div class="slide">
-                <h2>1000+ Medicines Pre-Loaded</h2>
-                <p>Search, track, and sell with zero setup time.</p>
-            </div>
-            <div class="slide">
-                <h2>Secure Analytics</h2>
-                <p>Monitor your previous records and history accurately.</p>
-            </div>
-        </div>
-
-        <div class="dashboard">
-            <div class="card">
-                <h3>Recent Sales Records</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Date/Time</th>
-                            <th>Item</th>
-                            <th>Total (PKR)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="historyTableBody">
-                        <tr><td>Today, 10:15 AM</td><td>Panadol (x2)</td><td>60</td></tr>
-                        <tr><td>Today, 11:30 AM</td><td>Augmentin 625mg (x1)</td><td>250</td></tr>
-                        <tr><td>Yesterday, 4:00 PM</td><td>Brufen Syrup (x3)</td><td>270</td></tr>
-                        <tr><td>Yesterday, 6:45 PM</td><td>Flagyl 400mg (x1)</td><td>120</td></tr>
+        <div class="card table-container">
+            <h3>Live Inventory Management</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Medicine Name</th>
+                        <th>Price (PKR)</th>
+                        <th>Stock Left</th>
+                        <th>Total Value (PKR)</th>
+                        <th>Actions (Manage Stock)</th>
+                    </tr>
+                </thead>
+                <tbody id="inventoryTableBody">
                     </tbody>
-                </table>
-            </div>
-
-            <div class="card">
-                <h3>Live Inventory</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Medicine Name</th>
-                            <th>Category</th>
-                            <th>Price (PKR)</th>
-                            <th>Stock</th>
-                        </tr>
-                    </thead>
-                    <tbody id="inventoryTableBody">
-                        </tbody>
-                </table>
-            </div>
+            </table>
         </div>
+
     </div>
 
     <script>
-        // --- 1. Authenticaton Logic (Local Simulation) ---
-        const authOverlay = document.getElementById('authOverlay');
-        const setupCard = document.getElementById('setupCard');
-        const loginCard = document.getElementById('loginCard');
-        const mainApp = document.getElementById('mainApp');
+        // --- 1. Database Initialization ---
+        // We use localStorage to save data between page refreshes.
+        let inventory = JSON.parse(localStorage.getItem('pharmaInventory'));
 
-        // Check if password was already set in a previous session
-        window.onload = () => {
-            if (localStorage.getItem('pharmaMasterPass')) {
-                setupCard.style.display = 'none';
-                loginCard.style.display = 'block';
-            }
-        };
-
-        function setPassword() {
-            const pass = document.getElementById('newPassword').value;
-            if(pass.length < 4) return alert("Password must be at least 4 characters.");
-            localStorage.setItem('pharmaMasterPass', pass);
-            alert("Password set successfully! Please log in.");
-            setupCard.style.display = 'none';
-            loginCard.style.display = 'block';
+        // If no data exists in localStorage, load the default starter pack
+        if (!inventory) {
+            inventory = [
+                { id: "M001", name: "Panadol", price: 30, stock: 500 },
+                { id: "M002", name: "Augmentin 625mg", price: 250, stock: 120 },
+                { id: "M003", name: "Brufen 400mg", price: 45, stock: 300 },
+                { id: "M004", name: "Flagyl 400mg", price: 120, stock: 150 }
+            ];
+            saveData();
         }
 
-        function login() {
-            const input = document.getElementById('loginPassword').value;
-            const stored = localStorage.getItem('pharmaMasterPass');
-            if (input === stored) {
-                authOverlay.style.display = 'none';
-                mainApp.style.display = 'block';
-                startSlideshow();
-                loadInventory();
-            } else {
-                alert("Incorrect Password!");
-            }
+        // --- 2. Core Functions ---
+
+        // Save current inventory array to browser storage
+        function saveData() {
+            localStorage.setItem('pharmaInventory', JSON.stringify(inventory));
         }
 
-        function logout() {
-            mainApp.style.display = 'none';
-            authOverlay.style.display = 'flex';
-            document.getElementById('loginPassword').value = '';
-        }
-
-        function forgotPassword() {
-            alert("System Notice: To send actual emails, this software needs to be connected to a backend server (like Node.js or Firebase). \n\nFor this local demo, your password has been completely reset. Please refresh the page to set a new one.");
-            localStorage.removeItem('pharmaMasterPass');
-            location.reload();
-        }
-
-        // --- 2. Slideshow Logic ---
-        let slideIndex = 0;
-        function startSlideshow() {
-            let slides = document.getElementsByClassName("slide");
-            for (let i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";  
-            }
-            slideIndex++;
-            if (slideIndex > slides.length) {slideIndex = 1}    
-            slides[slideIndex-1].style.display = "block";  
-            setTimeout(startSlideshow, 4000); // Change image every 4 seconds
-        }
-
-        // --- 3. Inventory Database (Pre-loaded Medicines) ---
-        // You can add your remaining 900+ medicines to this exact array.
-        const medicinesDB = [
-            { id: "M001", name: "Panadol", category: "Painkiller", price: 30, stock: 500 },
-            { id: "M002", name: "Augmentin 625mg", category: "Antibiotic", price: 250, stock: 120 },
-            { id: "M003", name: "Brufen 400mg", category: "Painkiller", price: 45, stock: 300 },
-            { id: "M004", name: "Flagyl 400mg", category: "Antibiotic", price: 120, stock: 150 },
-            { id: "M005", name: "Disprin", category: "Painkiller", price: 20, stock: 400 },
-            { id: "M006", name: "Arinac", category: "Cold/Flu", price: 80, stock: 200 },
-            { id: "M007", name: "Rigix", category: "Anti-allergy", price: 95, stock: 180 },
-            { id: "M008", name: "Panadol CF", category: "Cold/Flu", price: 40, stock: 250 },
-            { id: "M009", name: "Surbex Z", category: "Vitamins", price: 320, stock: 90 },
-            { id: "M010", name: "Cac-1000 Plus", category: "Vitamins", price: 210, stock: 110 },
-            { id: "M011", name: "Ponstan", category: "Painkiller", price: 65, stock: 220 },
-            { id: "M012", name: "Motilium", category: "Antiemetic", price: 55, stock: 140 },
-            { id: "M013", name: "Risek 20mg", category: "Antacid", price: 180, stock: 175 },
-            { id: "M014", name: "Nuberol Forte", category: "Muscle Relaxant", price: 110, stock: 130 },
-            { id: "M015", name: "Novidat 500mg", category: "Antibiotic", price: 290, stock: 80 },
-            { id: "M016", name: "Gravinate", category: "Antiemetic", price: 40, stock: 200 },
-            { id: "M017", name: "Mucaine Syrup", category: "Antacid", price: 150, stock: 60 },
-            { id: "M018", name: "Ginkocer", category: "Supplement", price: 450, stock: 40 },
-            { id: "M019", name: "Kestine", category: "Anti-allergy", price: 180, stock: 95 },
-            { id: "M020", name: "Leflox 500mg", category: "Antibiotic", price: 350, stock: 70 }
-        ];
-
-        function loadInventory() {
-            const tableBody = document.getElementById('inventoryTableBody');
-            tableBody.innerHTML = ''; // Clear loading state
+        // Render the table and calculate totals
+        function renderTable() {
+            const tbody = document.getElementById('inventoryTableBody');
+            const grandTotalDisplay = document.getElementById('grandTotalDisplay');
             
-            medicinesDB.forEach(med => {
+            tbody.innerHTML = ''; // Clear table
+            let grandTotal = 0;
+
+            inventory.forEach((med, index) => {
+                const totalItemValue = med.price * med.stock;
+                grandTotal += totalItemValue;
+
                 const row = `<tr>
                     <td>${med.id}</td>
                     <td><strong>${med.name}</strong></td>
-                    <td><span class="badge">${med.category}</span></td>
                     <td>${med.price}</td>
-                    <td>${med.stock}</td>
+                    <td><strong>${med.stock}</strong></td>
+                    <td class="total-price">${totalItemValue.toLocaleString()}</td>
+                    <td class="actions">
+                        <button class="btn-success" onclick="checkIn('${med.id}')">+ Check In</button>
+                        <button class="btn-secondary" style="width:auto; font-size: 0.8rem; padding: 5px 10px; background-color:#f59e0b;" onclick="checkOut('${med.id}')">- Check Out</button>
+                        <button class="btn-danger" onclick="deleteMedicine('${med.id}')">Delete</button>
+                    </td>
                 </tr>`;
-                tableBody.innerHTML += row;
+                tbody.innerHTML += row;
             });
+
+            grandTotalDisplay.innerText = `Total Inventory Value: ${grandTotal.toLocaleString()} PKR`;
         }
+
+        // --- 3. Interactive Actions ---
+
+        // Add a brand new medicine
+        document.getElementById('addMedForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent page refresh
+
+            const id = document.getElementById('medId').value;
+            const name = document.getElementById('medName').value;
+            const price = parseFloat(document.getElementById('medPrice').value);
+            const stock = parseInt(document.getElementById('medStock').value);
+
+            // Check if ID already exists
+            if (inventory.find(m => m.id === id)) {
+                alert("Error: A medicine with this ID already exists!");
+                return;
+            }
+
+            inventory.push({ id, name, price, stock });
+            saveData();
+            renderTable();
+            this.reset(); // Clear form inputs
+        });
+
+        // Check In (Add stock to existing)
+        function checkIn(id) {
+            const amount = parseInt(prompt("Enter quantity to CHECK IN (add to stock):", "10"));
+            if (!isNaN(amount) && amount > 0) {
+                const med = inventory.find(m => m.id === id);
+                med.stock += amount;
+                saveData();
+                renderTable();
+            }
+        }
+
+        // Check Out (Sell stock from existing)
+        function checkOut(id) {
+            const med = inventory.find(m => m.id === id);
+            const amount = parseInt(prompt(`Enter quantity to CHECK OUT (sell).\nCurrent stock: ${med.stock}`, "1"));
+            
+            if (!isNaN(amount) && amount > 0) {
+                if (amount > med.stock) {
+                    alert("Error: Cannot check out more than current stock!");
+                } else {
+                    med.stock -= amount;
+                    saveData();
+                    renderTable();
+                }
+            }
+        }
+
+        // Delete a medicine entirely
+        function deleteMedicine(id) {
+            const med = inventory.find(m => m.id === id);
+            if (confirm(`Are you sure you want to completely delete ${med.name} from the system?`)) {
+                inventory = inventory.filter(m => m.id !== id);
+                saveData();
+                renderTable();
+            }
+        }
+
+        // Initialize table on first load
+        window.onload = renderTable;
+
     </script>
 </body>
 </html>
-
-    
