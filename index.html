@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PharmaManage - Medical Store System</title>
+    <style>
+        /* CSS Styles */
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #28a745;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 2rem;
+            gap: 2rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--bg-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .inventory-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .inventory-table th, .inventory-table td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        .inventory-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>PharmaManage System</h1>
+        <p>Medical Store Inventory & Sales Tracker</p>
+    </header>
+
+    <div class="container">
+        
+        <div class="card">
+            <h2>Add New Medicine</h2>
+            <div class="form-group">
+                <label for="medName">Medicine Name</label>
+                <input type="text" id="medName" placeholder="e.g. Paracetamol">
+            </div>
+            <div class="form-group">
+                <label for="medQuantity">Quantity</label>
+                <input type="number" id="medQuantity" placeholder="e.g. 100">
+            </div>
+            <div class="form-group">
+                <label for="medPrice">Price per unit (PKR)</label>
+                <input type="number" id="medPrice" placeholder="e.g. 50">
+            </div>
+            <button>Add to Inventory</button>
+        </div>
+
+        <div class="card">
+            <h2>Record Sale</h2>
+            <div class="form-group">
+                <label for="sellName">Medicine Name</label>
+                <input type="text" id="sellName" placeholder="Search medicine...">
+            </div>
+            <div class="form-group">
+                <label for="sellQuantity">Quantity to Sell</label>
+                <input type="number" id="sellQuantity" placeholder="e.g. 2">
+            </div>
+            <button style="background-color: #dc3545;">Process Sale</button>
+        </div>
+
+        <div class="card" style="max-width: 800px;">
+            <h2>Current Inventory</h2>
+            <table class="inventory-table">
+                <thead>
+                    <tr>
+                        <th>Medicine Name</th>
+                        <th>Stock Left</th>
+                        <th>Price (PKR)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Panadol</td>
+                        <td>150</td>
+                        <td>30</td>
+                    </tr>
+                    <tr>
+                        <td>Amoxicillin</td>
+                        <td>85</td>
+                        <td>120</td>
+                    </tr>
+                    <tr>
+                        <td>Ibuprofen</td>
+                        <td>200</td>
+                        <td>45</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</body>
+</html>
